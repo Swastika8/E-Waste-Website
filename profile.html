@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function(){
+      const nameInput = document.getElementById('name');
+      const saveBtn = document.getElementById('save');
+      const display = document.getElementById('display');
+      const stored = localStorage.getItem('displayName') || 'Guest';
+      display.textContent = stored;
+      nameInput.value = stored;
+      saveBtn.addEventListener('click', function(){
+        localStorage.setItem('displayName', nameInput.value || 'Guest');
+        display.textContent = nameInput.value || 'Guest';
+        alert('Profile saved.');
+      });
+    });
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot"></span> E‑Waste</div>
+      <div class="nav-links">
+        <a id="nav-dashboard" href="dashboard.html">Dashboard</a>
+        <a id="nav-simulator" href="simulator.html">Simulator</a>
+        <a id="nav-marketplace" href="marketplace.html">Marketplace</a>
+        <a id="nav-ai" href="ai.html">AI Classifier</a>
+        <a id="nav-leaderboard" href="leaderboard.html">Leaderboard</a>
+        <a id="nav-profile" href="profile.html">Profile</a>
+        <span class="pill"><span class="dot"></span> <span data-points>0</span> pts</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="margin-top:18px">
+    <div class="panel">
+      <h3 style="margin-top:0">Your Profile</h3>
+      <p>Display name: <strong id="display">Guest</strong></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input id="name" placeholder="Enter display name" />
+        <button id="save" class="primary">Save</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+
+
