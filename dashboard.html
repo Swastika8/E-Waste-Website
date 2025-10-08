@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E‑Waste App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDKs (optional: populate config below to enable real auth/db) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script type="application/json" id="firebase-config">{
+    "apiKey":"",
+    "authDomain":"",
+    "projectId":"",
+    "storageBucket":"",
+    "messagingSenderId":"",
+    "appId":""
+  }</script>
+  <script defer src="assets/js/app.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script defer src="assets/js/points.js"></script>
+  <script defer src="assets/js/charts.js"></script>
+  <script defer src="assets/js/simulator.js"></script>
+  <script defer src="assets/js/marketplace.js"></script>
+  <script defer src="assets/js/ai.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot"></span> E‑Waste</div>
+      <div class="nav-links">
+        <a id="nav-dashboard" href="#dashboard">Dashboard</a>
+        <a id="nav-simulator" href="#simulator">Simulator</a>
+        <a id="nav-marketplace" href="#marketplace">Marketplace</a>
+        <a id="nav-ai" href="#ai">AI Classifier</a>
+        <a id="nav-leaderboard" href="#leaderboard">Leaderboard</a>
+        <a id="nav-profile" href="#profile">Profile</a>
+        <a id="nav-login" href="auth.html#login">Log in</a>
+        <a id="nav-signup" href="auth.html#signup">Sign up</a>
+        <a id="nav-logout" class="hidden" href="javascript:void(0)">Log out</a>
+        <span class="pill" title="Your points"><span class="dot"></span> <span data-points>0</span> pts</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="margin-top:18px">
+    <section class="hero" style="margin-bottom:18px">
+      <h1>Turn <span class="gradient-text">E‑waste</span> into Impact</h1>
+      <p>Simulate recycling, track recovered materials, and join a community that rewards sustainable actions.</p>
+      <div class="hero-ctas">
+        <a class="btn primary" href="#simulator">Start Simulating</a>
+        <a class="btn ghost" href="auth.html#signup">Create Account</a>
+      </div>
+    </section>
+    <!-- Dashboard Section -->
+    <section id="section-dashboard">
+      <div class="grid cols-3">
+        <div class="panel stat"><div class="label">Total e‑waste processed</div><div id="stat-waste" class="value">0 kg</div></div>
+        <div class="panel stat"><div class="label">CO₂ saved</div><div id="stat-co2" class="value">0 kg</div></div>
+        <div class="panel stat"><div class="label">Copper recovered</div><div id="stat-copper" class="value">0 kg</div></div>
+        <div class="panel stat"><div class="label">Gold recovered</div><div id="stat-gold" class="value">0 g</div></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="panel">
+        <h3 style="margin:0 0 10px 0">Impact Overview</h3>
+        <canvas id="impactChart" height="120"></canvas>
+      </div>
+      <div class="spacer"></div>
+      <div class="grid cols-2">
+        <div class="panel">
+          <h3 style="margin-top:0">Quick Actions</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="primary" onclick="(function(){ const r=Points.applyRecovery('phone'); if(!r) return; Points.awardPoints('simulate:phone',5); alert('Simulated phone recycling. +' + 5 + ' pts'); location.reload(); })()">Simulate Phone</button>
+            <button class="primary" onclick="(function(){ const r=Points.applyRecovery('laptop'); if(!r) return; Points.awardPoints('simulate:laptop',8); alert('Simulated laptop recycling. +' + 8 + ' pts'); location.reload(); })()">Simulate Laptop</button>
+            <button class="primary" onclick="(function(){ const r=Points.applyRecovery('tv'); if(!r) return; Points.awardPoints('simulate:tv',12); alert('Simulated TV recycling. +' + 12 + ' pts'); location.reload(); })()">Simulate TV</button>
+          </div>
+          <p style="color:#7a8aa0;margin-top:10px">Use the Simulator for full lifecycle flows.</p>
+        </div>
+        <div class="panel">
+          <h3 style="margin-top:0">What’s Next</h3>
+          <ul>
+            <li>Build full lifecycle simulator</li>
+            <li>Integrate AI classifier</li>
+            <li>Add marketplace listings</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Simulator Section -->
+    <section id="section-simulator" class="hidden">
+      <div class="panel">
+        <h3 style="margin-top:0">Lifecycle Simulator</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <select id="device">
+            <option value="phone">Phone</option>
+            <option value="laptop">Laptop</option>
+            <option value="tv">TV</option>
+          </select>
+          <button id="run" class="primary">Run Simulation</button>
+        </div>
+        <p id="output" style="color:#7a8aa0;margin-top:10px">Select a device and run simulation.</p>
+      </div>
+    </section>
+
+    <!-- Marketplace Section -->
+    <section id="section-marketplace" class="hidden">
+      <div class="grid cols-2">
+        <div class="panel">
+          <h3 style="margin-top:0">New Listing</h3>
+          <form id="listing-form" style="display:grid;gap:10px">
+            <input name="title" placeholder="Title (e.g., Old iPhone)" required />
+            <select name="type"><option value="donate">Donate</option><option value="sell">Sell</option><option value="swap">Swap</option></select>
+            <select name="category"><option>Phone</option><option>Laptop</option><option>TV</option><option>Other</option></select>
+            <input name="condition" placeholder="Condition (Good/Fair)" />
+            <input name="location" placeholder="Location (City)" />
+            <button class="primary" type="submit">Add Listing</button>
+          </form>
+        </div>
+        <div class="panel">
+          <h3 style="margin-top:0">Listings</h3>
+          <div id="listings" class="grid" style="gap:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="section-ai" class="hidden">
+      <div class="panel">
+        <h3 style="margin-top:0">AI Classifier (Prototype)</h3>
+        <div style="display:grid;gap:10px">
+          <input id="model-url" value="https://teachablemachine.withgoogle.com/models/MdmQA_5fO/" placeholder="Paste your Teachable Machine model URL" />
+          <small style="color:#7a8aa0">Example: https://your-host/path/to/model.json (we'll auto-load weights)</small>
+          <input id="image" type="file" accept="image/*" />
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <video id="camera" autoplay muted playsinline style="max-width:260px;border-radius:10px;border:1px solid rgba(255,255,255,.1)"></video>
+            <button id="snap" class="primary" type="button">Capture</button>
+          </div>
+          <div id="manual-wrapper" class="hidden" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <select id="manual-category">
+              <option value="phone">Phone</option>
+              <option value="laptop">Laptop</option>
+              <option value="tv">TV</option>
+              <option value="keyboard">Keyboard</option>
+              <option value="mouse">Mouse</option>
+            </select>
+            <span style="color:#7a8aa0">No model loaded — using manual category</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button id="wrong-btn" type="button" class="btn ghost">Wrong prediction? Choose manually</button>
+          </div>
+          <p id="result" style="color:#7a8aa0">Upload or capture an image to classify (phone/laptop/tv).</p>
+          <button id="simulate" class="primary">Simulate from Prediction</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="section-leaderboard" class="hidden">
+      <h3>Leaderboard</h3>
+      <div id="leaders" class="grid" style="gap:10px"></div>
+      <script>
+        document.addEventListener('DOMContentLoaded', function(){
+          const list = document.getElementById('leaders');
+          if(!list) return;
+          const me = { name:'You', points: App.getPoints() };
+          const sample = [ { name:'Maya', points:120 }, { name:'Arun', points:95 }, me, { name:'Sam', points:60 } ].sort((a,b)=>b.points-a.points);
+          list.innerHTML = '';
+          sample.forEach((u,i)=>{
+            const row = document.createElement('div');
+            row.className = 'panel';
+            row.textContent = (i+1)+'. '+u.name+' — '+u.points+' pts';
+            list.appendChild(row);
+          });
+        });
+      </script>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="section-profile" class="hidden">
+      <div class="panel">
+        <h3 style="margin-top:0">Your Profile</h3>
+        <p>Display name: <strong id="display">Guest</strong></p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <input id="name" placeholder="Enter display name" />
+          <button id="save" class="primary">Save</button>
+        </div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function(){
+            const nameInput = document.getElementById('name');
+            const saveBtn = document.getElementById('save');
+            const display = document.getElementById('display');
+            if(!nameInput || !saveBtn || !display) return;
+            const stored = localStorage.getItem('displayName') || 'Guest';
+            display.textContent = stored;
+            nameInput.value = stored;
+            saveBtn.addEventListener('click', function(){
+              localStorage.setItem('displayName', nameInput.value || 'Guest');
+              display.textContent = nameInput.value || 'Guest';
+              alert('Profile saved.');
+            });
+          });
+        </script>
+      </div>
+    </section>
+  </main>
+
+  
+
+  <script defer src="assets/js/auth.js"></script>
+  <script defer src="assets/js/classifier.js"></script>
+</body>
+</html>
+
+
