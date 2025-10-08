@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <!-- Firebase SDKs (match dashboard if needed) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script type="application/json" id="firebase-config">{
+    "apiKey":"",
+    "authDomain":"",
+    "projectId":"",
+    "storageBucket":"",
+    "messagingSenderId":"",
+    "appId":""
+  }</script>
+  <script defer src="assets/js/app.js"></script>
+  <script defer src="assets/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next') || 'dashboard.html#dashboard';
+      const view = location.hash === '#signup' ? 'signup' : 'login';
+      const loginCard = document.getElementById('card-login');
+      const signupCard = document.getElementById('card-signup');
+      function show(v){
+        if(v==='signup'){ loginCard.classList.add('hidden'); signupCard.classList.remove('hidden'); }
+        else { signupCard.classList.add('hidden'); loginCard.classList.remove('hidden'); }
+      }
+      show(view);
+
+      // On successful auth, redirect back
+      document.addEventListener('auth:success', function(){ location.href = next; });
+    });
+  </script>
+  <style>
+    .center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+    .card{width:100%;max-width:420px}
+  </style>
+  
+</head>
+<body>
+  <div class="center">
+    <div class="card panel" id="card-login">
+      <h3 style="margin-top:0">Log in</h3>
+      <form id="login-form" style="display:grid;gap:10px">
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="password" type="password" placeholder="Password" required />
+        <button class="primary" type="submit">Log in</button>
+      </form>
+      <p style="color:#7a8aa0">No account? <a href="#signup" onclick="(function(){document.getElementById('card-login').classList.add('hidden');document.getElementById('card-signup').classList.remove('hidden')})()">Sign up</a></p>
+    </div>
+
+    <div class="card panel hidden" id="card-signup">
+      <h3 style="margin-top:0">Sign up</h3>
+      <form id="signup-form" style="display:grid;gap:10px">
+        <input name="displayName" placeholder="Display name" />
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="password" type="password" placeholder="Password" required />
+        <button class="primary" type="submit">Create account</button>
+      </form>
+      <p style="color:#7a8aa0">Have an account? <a href="#login" onclick="(function(){document.getElementById('card-signup').classList.add('hidden');document.getElementById('card-login').classList.remove('hidden')})()">Log in</a></p>
+    </div>
+  </div>
+</body>
+</html>
+
+
