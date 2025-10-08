@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marketplace</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+  <script defer src="assets/js/points.js"></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function(){
+      const form = document.getElementById('listing-form');
+      const list = document.getElementById('listings');
+      const listings = JSON.parse(localStorage.getItem('listings')||'[]');
+      function render(){
+        list.innerHTML = '';
+        listings.forEach(item=>{
+          const li = document.createElement('div');
+          li.className = 'panel';
+          li.innerHTML = '<strong>'+item.title+'</strong> — '+item.type+' — '+item.category+' — '+item.location;
+          list.appendChild(li);
+        });
+      }
+      render();
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+        listings.push(data);
+        localStorage.setItem('listings', JSON.stringify(listings));
+        render();
+        if(data.type==='donate'){ Points.awardPoints('donation', 10); }
+        form.reset();
+      });
+    });
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot"></span> E‑Waste</div>
+      <div class="nav-links">
+        <a id="nav-dashboard" href="dashboard.html">Dashboard</a>
+        <a id="nav-simulator" href="simulator.html">Simulator</a>
+        <a id="nav-marketplace" href="marketplace.html">Marketplace</a>
+        <a id="nav-ai" href="ai.html">AI Classifier</a>
+        <a id="nav-leaderboard" href="leaderboard.html">Leaderboard</a>
+        <a id="nav-profile" href="profile.html">Profile</a>
+        <span class="pill"><span class="dot"></span> <span data-points>0</span> pts</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="margin-top:18px">
+    <div class="grid cols-2">
+      <div class="panel">
+        <h3 style="margin-top:0">New Listing</h3>
+        <form id="listing-form" style="display:grid;gap:10px">
+          <input name="title" placeholder="Title (e.g., Old iPhone)" required />
+          <select name="type"><option value="donate">Donate</option><option value="sell">Sell</option><option value="swap">Swap</option></select>
+          <select name="category"><option>Phone</option><option>Laptop</option><option>TV</option><option>Other</option></select>
+          <input name="condition" placeholder="Condition (Good/Fair)" />
+          <input name="location" placeholder="Location (City)" />
+          <button class="primary" type="submit">Add Listing</button>
+        </form>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Listings</h3>
+        <div id="listings" class="grid" style="gap:10px"></div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
+
+
