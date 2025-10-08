@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/app.js"></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function(){
+      const list = document.getElementById('leaders');
+      const me = { name:'You', points: App.getPoints() };
+      // Local-only sample leaderboard
+      const sample = [
+        { name:'Maya', points: 120 },
+        { name:'Arun', points: 95 },
+        me,
+        { name:'Sam', points: 60 },
+      ].sort((a,b)=>b.points-a.points);
+      sample.forEach((u,i)=>{
+        const row = document.createElement('div');
+        row.className = 'panel';
+        row.textContent = (i+1)+'. '+u.name+' — '+u.points+' pts';
+        list.appendChild(row);
+      });
+    });
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand"><span class="dot"></span> E‑Waste</div>
+      <div class="nav-links">
+        <a id="nav-dashboard" href="dashboard.html">Dashboard</a>
+        <a id="nav-simulator" href="simulator.html">Simulator</a>
+        <a id="nav-marketplace" href="marketplace.html">Marketplace</a>
+        <a id="nav-ai" href="ai.html">AI Classifier</a>
+        <a id="nav-leaderboard" href="leaderboard.html">Leaderboard</a>
+        <a id="nav-profile" href="profile.html">Profile</a>
+        <span class="pill"><span class="dot"></span> <span data-points>0</span> pts</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="margin-top:18px">
+    <h3>Leaderboard</h3>
+    <div id="leaders" class="grid" style="gap:10px"></div>
+  </main>
+</body>
+</html>
+
+
