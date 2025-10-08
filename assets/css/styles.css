@@ -1,0 +1,74 @@
+/* Base styles for E-Waste prototype */
+:root{
+  --bg:#0a0f1f;
+  --panel:rgba(17,25,40,0.6);
+  --muted:#8fa3bf;
+  --text:#eaf2ff;
+  --accent:#22c55e;
+  --accent-2:#06b6d4;
+  --warn:#f59e0b;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(34,197,94,.12), transparent 40%),
+              radial-gradient(1000px 700px at 100% 0%, rgba(6,182,212,.12), transparent 45%),
+              linear-gradient(180deg, #0b1224 0%, #0a0f1f 100%);
+}
+
+.container{max-width:1100px;margin:0 auto;padding:16px}
+
+/* Navbar */
+.navbar{background:linear-gradient(180deg, rgba(12,18,36,.9), rgba(12,18,36,.65));backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.brand .dot{width:10px;height:10px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+.nav-links{display:flex;gap:10px;flex-wrap:wrap}
+.nav-links a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px;transition:all .15s ease}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+.nav-links a{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.nav-links a.active{color:var(--text);background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(6,182,212,.15));border-color:rgba(34,197,94,.45);box-shadow:inset 0 0 0 1px rgba(34,197,94,.2)}
+.nav-links a::after{content:"";position:absolute;left:10px;right:10px;bottom:6px;height:2px;background:linear-gradient(90deg,transparent,rgba(34,197,94,.7),rgba(6,182,212,.7),transparent);transform:scaleX(0);transform-origin:center;transition:transform .2s ease}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+
+/* Panels */
+.panel{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.grid{display:grid;gap:16px}
+.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr}}
+
+/* Badges/Counters */
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--text)}
+.pill .dot{width:8px;height:8px;border-radius:999px;background:var(--accent)}
+.stat{display:flex;flex-direction:column;gap:6px}
+.stat .value{font-size:24px;font-weight:700}
+.stat .label{color:var(--muted);font-size:12px}
+/* Utility */
+.hidden{display:none}
+
+/* Forms */
+input,select,button,textarea{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text);padding:10px 12px;border-radius:10px}
+button{cursor:pointer}
+button.primary{background:radial-gradient(120% 120% at 0% 0%, rgba(34,197,94,.9), rgba(6,182,212,.9));border:none;box-shadow:0 6px 18px rgba(6,182,212,.25);transition:transform .08s ease, filter .15s ease, box-shadow .15s ease}
+button.primary:hover{filter:brightness(1.06);transform:translateY(-1px)}
+button.primary:active{transform:translateY(0)}
+
+/* Footer spacer */
+.spacer{height:24px}
+
+/* Hero */
+.hero{padding:28px 16px;border-radius:16px;background:
+  radial-gradient(800px 400px at 0% -10%, rgba(34,197,94,.15), transparent 40%),
+  radial-gradient(800px 400px at 100% 0%, rgba(6,182,212,.15), transparent 45%),
+  linear-gradient(180deg, rgba(13,20,40,.9), rgba(13,20,40,.6));
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.hero h1{margin:0 0 8px 0;font-size:36px;line-height:1.2}
+.hero p{margin:0;color:var(--muted)}
+.gradient-text{background:linear-gradient(135deg,#22c55e,#06b6d4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-ctas{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);text-decoration:none;color:var(--text)}
+.btn.primary{background:radial-gradient(120% 120% at 0% 0%, rgba(34,197,94,.9), rgba(6,182,212,.9));border:none;box-shadow:0 6px 18px rgba(6,182,212,.25)}
+.btn.ghost{background:rgba(255,255,255,.04)}
+
+
